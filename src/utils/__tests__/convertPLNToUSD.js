@@ -14,4 +14,21 @@ describe('ConvertPLNtoUSD', () => {
     expect(convertPLNToUSD('abcd')).toBeNaN();
 });
 
+it('should return NaN when input is empty', () => {
+  expect(convertPLNToUSD()).toBeNaN();
+});
+
+it('should return error when types are non suported', () => {
+  
+  const invalidInputs = [null, undefined, {}, [], true, false];
+
+  invalidInputs.forEach(input => {
+    expect(() => convertPLNToUSD(input)).toThrow();
+  });
+});
+
+it('should return $0.00 for negative numbers', () => {
+  expect(convertPLNToUSD(-1)).toBe('$0.00');
+  expect(convertPLNToUSD(-100)).toBe('$0.00');
+});
 });
