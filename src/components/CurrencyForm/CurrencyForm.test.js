@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { cleanup, render, screen } from '@testing-library/react';
 import CurrencyForm from './CurrencyForm';
 import userEvent from '@testing-library/user-event';
 
@@ -8,6 +8,13 @@ describe('Component CurrencyForm', () => {
     render(<CurrencyForm action={() => {}} />);
   });
 
+  const testCases = [
+    { amount: '100', from: 'PLN', to: 'USD' },
+    { amount: '20', from: 'USD', to: 'PLN' },
+    { amount: '200', from: 'PLN', to: 'USD' },
+    { amount: '345', from: 'USD', to: 'PLN' },
+  ];
+  for (const testObj of testCases){
   it('should run action callback with proper data on form submit', () => {
     const action = jest.fn();
 
@@ -24,6 +31,7 @@ describe('Component CurrencyForm', () => {
 
     //set test values to fields
 
+    userEvent.clear(amountField);
     userEvent.type(amountField, '100');
     userEvent.selectOptions(fromField, 'PLN');
     userEvent.selectOptions(toField, 'USD');
@@ -31,12 +39,12 @@ describe('Component CurrencyForm', () => {
     //simulate user click on "convert" button
 
     userEvent.click(submitButton);
-    
-    
 
     //check if action callback was called once and with proper argument
     expect(action).toHaveBeenCalledTimes(1);
     expect(action).toHaveBeenCalledWith({amount: 100, from: 'PLN', to: 'USD'});
     
-});
+    cleanup();
+})
+  };
 });
